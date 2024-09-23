@@ -1,6 +1,10 @@
 import { Inventario } from "./patters/singleton.patter";
 import { EquipoFactory } from "./patters/factory-method.patter";
 import { Soporte, Equipo } from "./patters/observer.patter";
+import {
+  AdaptadorInventario,
+  InventarioViejo,
+} from "./patters/adaptador.patter";
 
 //Patron Singletón
 const inventario = Inventario.obtenerInstancia();
@@ -29,3 +33,10 @@ const equipo = new Equipo("Notebook HP", "Portátil", "disponible");
 console.log("Patron Observer-------------------------");
 equipo.agregarObservador(soporte);
 equipo.cambiarEstado("en reparación");
+
+const inventarioViejo = new InventarioViejo();
+const adaptador = new AdaptadorInventario(inventarioViejo);
+
+console.log("Patron Adaptador-------------------------");
+adaptador.agregarEquipo("Servidor Dell", "Servidor", "disponible");
+console.log(adaptador.listarEquipos());
