@@ -1,16 +1,12 @@
-import { Equipo, Inventario } from "./patters/singleton.patter";
+import { Inventario } from "./patters/singleton.patter";
 import { EquipoFactory } from "./patters/factory-method.patter";
+import { Soporte, Equipo } from "./patters/observer.patter";
 
 //Patron Singletón
 const inventario = Inventario.obtenerInstancia();
 
-const equipo1: Equipo = {
-  name: "Laptop",
-  tipo: "Computo",
-  estado: "disponible",
-};
-
-inventario.agregarEquipo(equipo1);
+inventario.agregarEquipo("Laptop", "Computo", "disponible");
+console.log("Patron Singletón-------------------------");
 console.log(inventario.mostrarEquipos());
 
 //Patron Factory Method
@@ -23,4 +19,13 @@ const equipo2 = {
 };
 
 const newNotebook = factory.crearEquipo("Notebook", "Dell XPS", "16GB", "i7");
+console.log("Patron Factory Method-------------------------");
 console.log(newNotebook.detalles());
+
+//Metodo Observer
+const soporte = new Soporte();
+const equipo = new Equipo("Notebook HP", "Portátil", "disponible");
+
+console.log("Patron Observer-------------------------");
+equipo.agregarObservador(soporte);
+equipo.cambiarEstado("en reparación");
