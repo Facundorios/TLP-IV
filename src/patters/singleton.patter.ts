@@ -1,41 +1,92 @@
-//Tipo de estado disponible para el equipo
-type EstadoEquipo = "disponible" | "en reparación";
+export class Configuracion {
+  private static instancia: Configuracion;
 
-//Interfaz equipo para el manejo de los datos
-export interface Equipo {
-  nombre: string;
-  tipo: string;
-  estado: EstadoEquipo;
+  private idioma: string;
+  private rutaBaseDatos: string;
+  private nivelRegistro: string;
+
+  // Constructor privado para evitar instanciación directa
+  private constructor() {
+    this.idioma = "es";
+    this.rutaBaseDatos = "/database/databaseConnection.js";
+    this.nivelRegistro = "INFO";
+  }
+
+  public static getInstancia(): Configuracion {
+    if (!this.instancia) {
+      this.instancia = new Configuracion();
+    }
+    return this.instancia;
+  }
+
+  public getIdioma(): string {
+    return this.idioma;
+  }
+
+  public setIdioma(idioma: string): void {
+    this.idioma = idioma;
+  }
+
+  public getRutaBaseDatos(): string {
+    return this.rutaBaseDatos;
+  }
+
+  public setRutaBaseDatos(ruta: string): void {
+    this.rutaBaseDatos = ruta;
+  }
+
+  public getNivelRegistro(): string {
+    return this.nivelRegistro;
+  }
+
+  public setNivelRegistro(nivel: string): void {
+    this.nivelRegistro = nivel;
+  }
 }
 
-export class Inventario {
-  //Se crea una instancia privada de la clase
-  private static instancia: Inventario;
-  //Se crea un arreglo privado de equipos
-  private equipos: { nombre: string; tipo: string; estado: EstadoEquipo }[] =
-    [];
+export class ConexionDB {
+  private static instancia: ConexionDB;
 
-  //constructor con el fin de que no se pueda instanciar la clase
-  private constructor() {}
+  private host: string;
+  private puerto: number;
+  private usuario: string;
+  private conectado: boolean;
 
-  //Se verifica mediante un metodo si la instancia ya fue creada
-  public static obtenerInstancia() {
-    if (!Inventario.instancia) {
-      Inventario.instancia = new Inventario();
+  // Constructor privado
+  private constructor() {
+    this.host = "localhost";
+    this.puerto = 5432;
+    this.usuario = "admin";
+    this.conectado = false;
+  }
+
+  // Método estático para obtener la única instancia de ConexionDB
+  public static getInstancia(): ConexionDB {
+    if (!this.instancia) {
+      this.instancia = new ConexionDB();
     }
-    return Inventario.instancia;
+    return this.instancia;
   }
 
-  //Metodo para agregar un equipo al inventario, se utiliza el tipo void ya que no retorna nada
-  public agregarEquipo(
-    nombre: string,
-    tipo: string,
-    estado: EstadoEquipo
-  ): void {
-    this.equipos.push({ nombre, tipo, estado });
+  // Método para conectar a la base de datos
+  public conectar(): void {
+    if (!this.conectado) {
+      console.log(
+        `Conectando a la base de datos en ${this.host}:${this.puerto} como ${this.usuario}...`
+      );
+      this.conectado = true;
+    } else {
+      console.log("Ya está conectado a la base de datos.");
+    }
   }
 
-  public mostrarEquipos(): Equipo[] {
-    return this.equipos;
+  // Método para desconectar de la base de datos
+  public desconectar(): void {
+    if (this.conectado) {
+      console.log("Desconectando de la base de datos...");
+      this.conectado = false;
+    } else {
+      console.log("No hay conexión activa a la base de datos.");
+    }
   }
 }
